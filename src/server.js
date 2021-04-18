@@ -1,9 +1,13 @@
 const express = require("express");
 const routes = require("./routes");
 const server = express();
+const path = require("path");
 
 //Template engine
 server.set("view engine", "ejs");
+
+//Mudar a localização da página views
+server.set("views", path.join(__dirname, "Views"));
 
 //Habilita arquivos estáticos e cria rotas para eles
 server.use(express.static("public"));
