@@ -3,9 +3,9 @@ const JobUtils = require("../Utils/JobUtils");
 const Profile = require("../Model/Profile");
 
 module.exports = {
-  index(req, res) {
-    const jobs = Job.get();
-    const profile = Profile.get();
+  async index(req, res) {
+    const jobs = await Job.get();
+    const profile = await Profile.get();
 
     let statusCount = {
       progress: 0,
@@ -25,20 +25,20 @@ module.exports = {
 
       jobTotalHours =
         status === "progress"
-          ? (jobTotalHours += Number(job["daily-hours"]))
+          ? (jobTotalHours += Number(job.daily_hours))
           : jobTotalHours;
 
       return {
         ...job,
         remaining,
         status,
-        budget: JobUtils.calculateBudget(job, profile["value-hour"]),
+        budget: JobUtils.calculateBudget(job, profile.value_hour),
       };
     });
 
     //Cálculo da qtd de horas livres no dia
 
-    const freeHours = profile["hours-per-day"] - jobTotalHours;
+    const freeHours = profile.hours_per_day - jobTotalHours;
 
     return res.render("index", {
       jobs: updatedJobs,
